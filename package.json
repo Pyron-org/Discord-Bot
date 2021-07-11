@@ -1,0 +1,15 @@
+{
+  "name": "ramen",
+  "version": "1.0.0",
+  "description": "discord bot",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "Matt",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^12.0.0",
+    "node-fetch": "^2.6.1"
+  }
+}
