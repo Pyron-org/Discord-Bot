@@ -5,6 +5,10 @@ const config = require('./Storage/config.json');
 var fs = require('fs');
 const fetch = require('node-fetch');
 
+var Docker = require('dockerode');
+var docker = new Docker(); //defaults to above if env variables are not used
+var tcpPortUsed = require('tcp-port-used');
+
 client.commands = new Discord.Collection();
 const commandFiles = fs.readdirSync('./Commands').filter(file => file.endsWith('.js'));
 
@@ -22,7 +26,7 @@ client.on('message', message => {
 	if (!client.commands.has(command)) return;
 
 	try {
-		client.commands.get(command).execute(message, args, Discord);
+		client.commands.get(command).execute(message, args, Discord, docker, tcpPortUsed );
 	} catch (error) {
 		console.error(error);
 		message.reply('there was an error trying to execute that command!');
