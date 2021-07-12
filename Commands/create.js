@@ -9,6 +9,7 @@ module.exports = {
 
                 } else { // found
                     message.channel.send("making new server");
+                    
 
                     var rndInt = Math.floor(Math.random() * 65534) + 1
                     tcpPortUsed.check(rndInt, '127.0.0.1').then(function(inUse) {
@@ -16,15 +17,21 @@ module.exports = {
                             docker.createContainer({
                                 Image: 'mc:mc',
                                 name: args[0],
-                                Env: [
-                                    'PORT='+rndInt
-                                ]
+                                Env: [ 'PORT='+rndInt ],
+                                ExposedPorts: { [rndInt+"/tcp"]: {}, },
+                                ExposedPorts: {
+                                    [rndInt + "/tcp"]: {},
+                                  },
+                                HostConfig: {
+                                    PortBindings: { [rndInt + "/tcp"]: [{ HostPort: rndInt.toString() }] },
+                                  }
+
                             } , function (err, container) {                        
                                 container.start(function (err, data) {
 
                                     container.attach({stream: true, stdout: true, stderr: true}, function (err, stream) {
                                         //dockerode may demultiplex attach streams for you :) 
-                                        container.modem.demuxStream(stream, process.stdout, process.stderr);    
+                                        //container.modem.demuxStream(stream, process.stdout, process.stderr);    
                                                                                                                  
                                     });  
                                     
@@ -39,7 +46,7 @@ module.exports = {
                                             {name: 'Port', value: rndInt},
                                             {name: 'Status', value: "Starting"}
                                         );
-                                    message.channel.send(createMsg)
+                                    message.channel.send(createMsg);
                                 });
                             });
                         }

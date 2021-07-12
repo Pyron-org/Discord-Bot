@@ -3,18 +3,36 @@ module.exports = {
     execute(message,args,Discord, docker, tcpPortUsed ) {
         message.channel.send("Listing all servers:")
         docker.listContainers({all:true},function (err, containers) {
+
+            let online = 0;
+            let offline = 0;
+
+            containers.forEach(function (containerInfo) {
+                if (docker.getContainer(containerInfo).id.State == "exited") {
+                    online = online+1;
+                    console.log(online);
+                } else {
+                    offline = offline+1;
+                };
+            });
+
+
+
             const createMsg = new Discord.MessageEmbed()
                 .setColor(0x00AE86)
                 .setTitle("Server List ")
                 .setFooter('Pyron')
-                 .setTimestamp()
+                .setTimestamp()
                 .addFields(
                     {name: 'Total servers', value: containers.length, inline:true},
-                    {name: 'Offline', value: "0", inline:true},
-                    {name: 'Online', value: "0", inline:true}
+                    {name: 'Offline', value: online, inline:true},
+                    {name: 'Online', value: offline, inline:true}
                     );
             message.channel.send(createMsg)
-            console.log(containers);
+            //console.log(containers);
+
+            
+            
             
         });
         
