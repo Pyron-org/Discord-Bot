@@ -49,6 +49,8 @@ module.exports = {
                                     message.channel.send(createMsg);
                                 });
                             });
+                        } else {
+                            message.channel.send('port in use! faggot. kys');
                         }
                     });
 
