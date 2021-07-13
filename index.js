@@ -4,6 +4,7 @@ const config = require('./Storage/config.json');
 
 var fs = require('fs');
 const fetch = require('node-fetch');
+var MongoClient = require('mongodb').MongoClient;
 
 var Docker = require('dockerode');
 var docker = new Docker(); //defaults to above if env variables are not used
@@ -26,7 +27,7 @@ client.on('message', message => {
 	if (!client.commands.has(command)) return;
 
 	try {
-		client.commands.get(command).execute(message, args, Discord, docker, tcpPortUsed );
+		client.commands.get(command).execute(message, args, Discord, docker, tcpPortUsed, MongoClient );
 	} catch (error) {
 		console.error(error);
 		message.reply('there was an error trying to execute that command!');
@@ -57,5 +58,9 @@ client.once('ready', () => {
 	client.user.setActivity(config.Status.STRING, {type: config.Status.type});
 
 });
+
+
+
+
 
 client.login(config.token);
